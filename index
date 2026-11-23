@@ -1,0 +1,628 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="TIU Virtual" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#ffffff" />
+  <title>TIU VIRTUAL</title>
+
+  <!-- Fuentes ligeras: Oswald para encabezados condensados e Inter para textos y reloj -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       RESET Y CONFIGURACIÓN BASE (MÓVIL FULLSCREEN ANDROID / iOS)
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background-color: #e8eaf2;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #1A1A1A;
+      touch-action: manipulation;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    /* Contenedor principal: pantalla completa en móvil, vista centrada en escritorio */
+    .app-shell {
+      position: relative;
+      width: 100vw;
+      height: 100dvh;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: linear-gradient(180deg, #FAFBFD 0%, #F5F6FE 58%, #EEF0FD 100%);
+    }
+
+    @media (min-width: 480px) {
+      .app-shell {
+        max-width: 430px;
+        box-shadow: 0 12px 44px rgba(30, 41, 90, 0.14);
+      }
+    }
+
+    /* ==========================================================================
+       ENCABEZADO SUPERIOR
+       ========================================================================== */
+    .top-header {
+      position: relative;
+      z-index: 30;
+      flex-shrink: 0;
+      width: 100%;
+      background-color: #FFFFFF;
+      border-bottom: 1px solid #ECEEF2;
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    .top-header-inner {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 18px;
+      gap: 22px;
+    }
+
+    .back-chevron {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      cursor: default;
+    }
+
+    .header-title {
+      font-family: 'Oswald', 'Arial Narrow', sans-serif;
+      font-weight: 600;
+      font-size: 19px;
+      letter-spacing: 0.5px;
+      color: #1A1A1A;
+      line-height: 1;
+      text-transform: uppercase;
+      cursor: default;
+    }
+
+    /* ==========================================================================
+       LIENZO PRINCIPAL, NUBES ANIMADAS Y SILUETAS ARQUITECTÓNICAS
+       ========================================================================== */
+    .main-stage {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: clamp(18px, 3.2dvh, 28px);
+      padding-bottom: calc(clamp(18px, 3dvh, 28px) + env(safe-area-inset-bottom, 0px));
+      overflow: hidden;
+    }
+
+    /* Capa de nubes en bucle continuo de izquierda a derecha */
+    .clouds-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .cloud {
+      position: absolute;
+      left: 0;
+      will-change: transform;
+      animation-name: driftRight;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    @keyframes driftRight {
+      0% {
+        transform: translate3d(-130px, 0, 0);
+      }
+      100% {
+        transform: translate3d(calc(100vw + 130px), 0, 0);
+      }
+    }
+
+    @media (min-width: 480px) {
+      @keyframes driftRight {
+        0% {
+          transform: translate3d(-130px, 0, 0);
+        }
+        100% {
+          transform: translate3d(560px, 0, 0);
+        }
+      }
+    }
+
+    /* 5 nubes con distintos tamaños, alturas y velocidades (28s a 55s) */
+    .cloud-1 {
+      top: 50%;
+      width: 44px;
+      opacity: 0.85;
+      animation-duration: 36s;
+      animation-delay: -5s;
+    }
+
+    .cloud-2 {
+      top: 47.5%;
+      width: 50px;
+      opacity: 0.82;
+      animation-duration: 44s;
+      animation-delay: -29s;
+    }
+
+    .cloud-3 {
+      top: 52.5%;
+      width: 82px;
+      opacity: 0.92;
+      animation-duration: 55s;
+      animation-delay: -26s;
+    }
+
+    .cloud-4 {
+      top: 58.5%;
+      width: 48px;
+      opacity: 0.88;
+      animation-duration: 32s;
+      animation-delay: -11s;
+    }
+
+    .cloud-5 {
+      top: 56.5%;
+      width: 30px;
+      opacity: 0.78;
+      animation-duration: 28s;
+      animation-delay: -22s;
+    }
+
+    /* ==========================================================================
+       SECCIÓN DE RELOJ Y FECHA EN TIEMPO REAL
+       ========================================================================== */
+    .clock-section {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .clock-box {
+      background-color: #DFDBFF;
+      border-radius: 12px;
+      padding: 10px 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .clock-time {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: clamp(30px, 8.2vw, 34px);
+      font-weight: 400;
+      color: #000000;
+      letter-spacing: 0.4px;
+      line-height: 1.15;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .clock-date {
+      margin-top: 10px;
+      font-size: 15px;
+      font-weight: 400;
+      color: #64687A;
+      letter-spacing: 0.1px;
+    }
+
+    /* ==========================================================================
+       FOTO DE PERFIL CIRCULAR (INMÓVIL Y SIN SEÑALES DE EDICIÓN)
+       ========================================================================== */
+    .avatar-section {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin: clamp(10px, 2dvh, 22px) 0;
+    }
+
+    .avatar-frame {
+      width: clamp(168px, 24dvh, 205px);
+      height: clamp(168px, 24dvh, 205px);
+      border-radius: 50%;
+      overflow: hidden;
+      background-color: #F1F1EF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: default;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .avatar-frame img,
+    .avatar-frame svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center;
+      pointer-events: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    #avatarInput {
+      display: none;
+    }
+
+    /* ==========================================================================
+       ZONA INFERIOR: SILUETAS ARQUITECTÓNICAS + TARJETA BLANCA
+       ========================================================================== */
+    .bottom-area {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      padding: 0 20px;
+      margin-top: auto;
+    }
+
+    /* Ilustraciones arquitectónicas estáticas asomando detrás de la tarjeta */
+    .architecture-backdrop {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: calc(100% - 26px);
+      height: 76px;
+      z-index: 1;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    .architecture-backdrop svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Tarjeta blanca principal */
+    .id-card {
+      position: relative;
+      z-index: 5;
+      width: 100%;
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      box-shadow: 0 6px 24px rgba(100, 115, 180, 0.08);
+      padding: clamp(20px, 3dvh, 26px) 20px clamp(22px, 3.2dvh, 28px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .editable-field {
+      cursor: default;
+      outline: none;
+      text-decoration: none;
+      border: none;
+      background: transparent;
+      max-width: 100%;
+      word-break: break-word;
+    }
+
+    .student-name {
+      font-family: 'Oswald', 'Arial Narrow', sans-serif;
+      font-weight: 600;
+      font-size: clamp(26px, 7.2vw, 30px);
+      color: #CE1126;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      line-height: 1.15;
+      margin-bottom: 12px;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .field-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: #6B7280;
+      line-height: 1.35;
+    }
+
+    .field-value {
+      font-size: 17px;
+      font-weight: 700;
+      color: #374151;
+      line-height: 1.35;
+      margin-top: 1px;
+      letter-spacing: 0.2px;
+    }
+
+    .student-career {
+      font-size: 15px;
+      font-weight: 700;
+      color: #374151;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+      line-height: 1.35;
+      margin-top: 14px;
+    }
+
+    .campus-row {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .campus-pin {
+      width: 15px;
+      height: 18px;
+      flex-shrink: 0;
+      display: inline-block;
+    }
+
+    .student-campus {
+      font-size: 15px;
+      font-weight: 400;
+      color: #5E6275;
+      line-height: 1.35;
+    }
+
+    /* ==========================================================================
+       MODAL DISCRETO DE EDICIÓN (SIN ALERT / PROMPT NATIVOS)
+       ========================================================================== */
+    .edit-modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background-color: rgba(15, 23, 42, 0.42);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .edit-modal-overlay.is-open {
+      display: flex;
+    }
+
+    .edit-modal {
+      width: 100%;
+      max-width: 340px;
+      background-color: #FFFFFF;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 18px 42px rgba(15, 23, 42, 0.22);
+      animation: modalFadeIn 0.16s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .edit-modal-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1F2937;
+      margin-bottom: 12px;
+    }
+
+    .edit-modal-input {
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      color: #111827;
+      background-color: #F9FAFB;
+      border: 1.5px solid #D1D5DB;
+      border-radius: 10px;
+      padding: 11px 13px;
+      outline: none;
+      user-select: text;
+      -webkit-user-select: text;
+      transition: border-color 0.15s ease;
+    }
+
+    .edit-modal-input:focus {
+      border-color: #6366F1;
+      background-color: #FFFFFF;
+    }
+
+    .edit-modal-hint {
+      font-size: 12px;
+      color: #6B7280;
+      margin-top: 6px;
+      min-height: 16px;
+    }
+
+    .edit-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .modal-btn {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 16px;
+      cursor: pointer;
+    }
+
+    .modal-btn-cancel {
+      background-color: #F3F4F6;
+      color: #4B5563;
+    }
+
+    .modal-btn-save {
+      background-color: #CE1126;
+      color: #FFFFFF;
+    }
+
+    /* Ajustes para pantallas muy compactas en altura */
+    @media (max-height: 670px) {
+      .clock-box {
+        padding: 8px 32px;
+      }
+      .clock-date {
+        margin-top: 6px;
+        font-size: 14px;
+      }
+      .avatar-frame {
+        width: 152px;
+        height: 152px;
+      }
+      .id-card {
+        padding: 16px 18px 18px;
+      }
+      .student-name {
+        margin-bottom: 8px;
+      }
+      .field-group {
+        margin-bottom: 7px;
+      }
+      .student-career {
+        margin-top: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Contenedor principal móvil a pantalla completa -->
+  <div class="app-shell" id="appShell">
+
+    <!-- Encabezado superior blanco -->
+    <header class="top-header">
+      <div class="top-header-inner">
+        <span class="back-chevron" aria-hidden="true">
+          <svg width="11" height="19" viewBox="0 0 11 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9.5 1.8L2 9.5L9.5 17.2" stroke="#D90429" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </span>
+        <!-- Doble clic / doble toque en TIU VIRTUAL alterna pantalla completa -->
+        <h1 class="header-title" id="headerTitle">TIU VIRTUAL</h1>
+      </div>
+    </header>
+
+    <!-- Escenario principal -->
+    <main class="main-stage">
+
+      <!-- Capa de 5 nubes pastel animadas de izquierda a derecha -->
+      <div class="clouds-layer" aria-hidden="true">
+        <!-- Nube 1 (izquierda media) -->
+        <svg class="cloud cloud-1" viewBox="0 0 64 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 25C4 21 7 18.5 11 18.5C12.2 14.2 16 11 20.8 11C23.6 11 26.2 12.1 28 14C30.2 10.2 34.4 7.5 39.2 7.5C46.4 7.5 52.2 13 52.8 20C56.8 20.3 60 22.2 60 25H4Z" fill="#C4CAF9" />
+        </svg>
+
+        <!-- Nube 2 (derecha media-alta) -->
+        <svg class="cloud cloud-2" viewBox="0 0 72 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 27C4 23 7.5 20 12 20C13.5 15 18 11.5 23.5 11.5C26.5 11.5 29.2 12.6 31.3 14.4C34 9.5 39.2 6 45.3 6C53.6 6 60.4 12.4 61 20.6C65.2 21 68 23.4 68 27H4Z" fill="#BFC6F8" />
+        </svg>
+
+        <!-- Nube 3 (central grande) -->
+        <svg class="cloud cloud-3" viewBox="0 0 110 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 40C6 33.8 11 29 17.5 29C19.5 21.8 26 16.5 34 16.5C38.2 16.5 42 18 45 20.6C49 12.6 57.2 7 66.8 7C79.8 7 90.4 17 91.4 29.8C98.2 30.4 104 34.4 104 40H6Z" fill="#C6CCF9" />
+        </svg>
+
+        <!-- Nube 4 (izquierda media-baja) -->
+        <svg class="cloud cloud-4" viewBox="0 0 68 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 25C4 21.4 7 18.8 11 18.8C13 13.8 17.8 10.5 23.5 10.5C27.2 10.5 30.5 12 32.8 14.5C35.5 9.8 40.5 6.8 46.2 6.8C53.6 6.8 59.8 12.5 60.5 19.8C63.8 20.4 65.5 22.3 65.5 25H4Z" fill="#C0C7F8" />
+        </svg>
+
+        <!-- Nube 5 (derecha pequeña) -->
+        <svg class="cloud cloud-5" viewBox="0 0 48 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 19C3 16 5.6 14 9 14C10.5 10.2 14.2 7.5 18.6 7.5C21.6 7.5 24.3 8.8 26.2 10.8C28.2 8.2 31.4 6.5 35 6.5C40.2 6.5 44.5 10.5 45 15.6C46.5 16.2 47 17.4 47 19H3Z" fill="#C8CEFA" />
+        </svg>
+      </div>
+
+      <!-- Reloj y fecha sincronizados con el dispositivo -->
+      <section class="clock-section" aria-label="Hora y fecha actual">
+        <div class="clock-box">
+          <div class="clock-time" id="clockTime">00:00:00</div>
+        </div>
+        <div class="clock-date" id="clockDate">Lunes, 23 Nov 2026</div>
+      </section>
+
+      <!-- Foto de perfil circular (inmóvil, cambiable con doble clic / doble toque) -->
+      <section class="avatar-section">
+        <div class="avatar-frame" id="avatarFrame">
+          <!-- Avatar SVG neutro por defecto (silueta masculina gris sobre #F1F1EF) -->
+          <svg id="defaultAvatarSvg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="200" height="200" fill="#F1F1EF" />
+            <!-- Cuello y sombra -->
+            <path d="M78 130H122V165H78V130Z" fill="#C7C7C5" />
+            <!-- Hombros y camisa -->
+            <path d="M22 200C26 168 55 153 82 148L100 166L118 148C145 153 174 168 178 200H22Z" fill="#9E9E9C" />
+            <!-- Cuello de camisa -->
+            <path d="M80 144L100 167L120 144L126 151L100 176L74 151L80 144Z" fill="#AEAEAC" />
+            <!-- Orejas -->
+            <ellipse cx="62" cy="96" rx="7" ry="12" fill="#D4D4D2" />
+            <ellipse cx="138" cy="96" rx="7" ry="12" fill="#D4D4D2" />
+            <!-- Rostro -->
+            <path d="M65 82C65 56 80 44 100 44C120 44 135 56 135 82C135 112 120 135 100 135C80 135 65 112 65 82Z" fill="#D8D8D6" />
+            <!-- Sombra sutil bajo barbilla -->
+            <path d="M78 124C84 133 92 138 100 138C108 138 116 133 122 124C116 138 108 145 100 145C92 145 84 138 78 124Z" fill="#B6B6B4" />
+            <!-- Cabello moderno estilizado -->
+            <path d="M62 88C59 73 61 54 71 42C79 33 91 28 106 27C115 26 122 30 124 34C133 36 140 46 140 60C140 70 139 80 136 88C134 79 132 70 129 63C124 54 114 52 103 53C90 54 78 58 72 68C68 74 66 82 65 88H62Z" fill="#9E9E9C" />
+          </svg>
+        </div>
+        <input type="file" id="avatarInput" accept="image/*" />
+      </section>
+
+      <!-- Zona inferior con siluetas arquitectónicas y tarjeta blanca -->
+      <section class="bottom-area">
+        <!-- Ilustraciones arquitectónicas estáticas en lavanda tenue -->
+        <div class="architecture-backdrop" aria-hidden="true">
+          <svg viewBox="0 0 430 84" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Cúpula / arco redondo izquierdo -->
+            <g opacity="0.62">
+              <circle cx="52" cy="70" r="46" fill="#D8DDFB" />
+              <line x1="52" y1="24" x2="52" y2="56" stroke="#FAFBFD" stroke-width="2" />
+              <line x1="30" y1="30" x2="44" y2="56" stroke="#FAFBFD" stroke-width="2" />
+              <line x1="74" y1="30" x2="60" y2="56" stroke="#FAFBFD" stroke-width="2" />
+              <line x1="14" y1="46" x2="36" y2="62" stroke="#FAFBFD" stroke-width="2" />
+              <line x1="90" y1="46" x2="68" y2="62" stroke="#FAFBFD" stroke-width="2" />
+            </g>
